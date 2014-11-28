@@ -1,42 +1,9 @@
-import matplotlib.cm as colmap
-import matplotlib.colors as mplc
-import matplotlib.pyplot as plt
 import numpy as np
 import numpy.linalg as nlg
 import scipy
 import scipy.sparse as sp
 from scipy.misc import factorial
 import scipy.linalg as spalg
-
-## Create DarkJet
-## ------
-col_list = colmap.jet(range(256))
-darken = np.tile((1 - 0.5/np.cosh(np.linspace(-10,10,256))).reshape((256,1)), [1,col_list.shape[1]])
-darkjet = mplc.ListedColormap(col_list*darken, 'darkjet', 256)
-plt.register_cmap(cmap=darkjet)
-## ------
-
-## CHEB computes the Chebyshev differentiation matrix
-## ------
-#    matrix on N+1 points (i.e. N intervals)
-#    D = differentiation matrix
-#    x = Chebyshev grid
-
-def cheb(N):
-    if N == 0:
-        D = 0
-        x = 1
-    else:
-        x = np.cos(np.pi*np.array(range(0,N+1))/N).reshape([N+1,1])
-        c = np.ravel(np.vstack([2, np.ones([N-1,1]), 2])) \
-            *(-1)**np.ravel(np.array(range(0,N+1)))
-        c = c.reshape(c.shape[0],1)
-        X = np.tile(x,(1,N+1))
-        dX = X-(X.conj().transpose())
-        D  = (c*(1/c).conj().transpose())/(dX+(np.eye(N+1)))   # off-diagonal entries
-        D  = D - np.diag(np.sum(D,1))   # diagonal entries
-    return D,x
-## ------
 
 ## FiniteDiff computes FD matrices
 ## ------
