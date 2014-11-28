@@ -1,4 +1,9 @@
-from grid_readers import get_shape
+import numpy as np
+import sys
+import collections
+import os
+import warnings
+from get_shape import get_shape
 
 ## Create reader files for SPINS outputs
 ## ------

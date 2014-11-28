@@ -1,6 +1,7 @@
 import matplotlib.cm as colmap
 import matplotlib.colors as mplc
 import matplotlib.pyplot as plt
+import numpy as np
 
 ## Create DarkJet
 ## ------

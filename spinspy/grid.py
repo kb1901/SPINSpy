@@ -1,3 +1,5 @@
+from reader import reader
+
 ## Read in the grid
 ## ------
 def grid(type='vector'):
