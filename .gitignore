@@ -1,5 +1,8 @@
 ## Ignore the data file for the tutorial
 rho.15
+xgrid
+ygrid
+zgrid
 
 ## Python pyc
 *.pyc
