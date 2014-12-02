@@ -1,3 +1,6 @@
+## Ignore the data file for the tutorial
+rho.15
+
 ## Python pyc
 *.pyc
 
