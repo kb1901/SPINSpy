@@ -3,6 +3,7 @@ import sys
 import collections
 import os
 import warnings
+from spinspy_classes import SillyHumanError
 from get_shape import get_shape
 
 ## Create reader files for SPINS outputs
