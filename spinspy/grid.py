@@ -4,7 +4,7 @@ from get_shape import get_shape
 ## Read in the grid
 ## ------
 def grid(type='vector'):
-    # This reads in the grid and produces a dictionary
+    # This reads in the grid and produces a class
     # that contains x, y, z, dx, dy, dz, Lx, Lx,
     # Lz, Nx, Ny, and Nz.
     
