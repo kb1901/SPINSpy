@@ -58,12 +58,15 @@ class Grid():
             if self.Lx == None:
                 print('  Length of Domain: n/a')
             else:
-                print('  Length of Domain: {0:1.4e}'.format(self.Lx))
+                print('  Length of Domain: {0:1.3e}'.format(self.Lx))
 
             if self.xlim == None:
                 print('  Bounds of Domain: n/a')
             else:
-                print('  Boundas of Domain: {0}, {1}'.format(self.xlim[0], self.xlim[1]))
+                print('  Boundas of Domain: {0:1.3e}, {1:1.3e}'.format(self.xlim[0], self.xlim[1]))
+                    
+            if hasattr(self, 'type_x'):
+                print('  Type: {0:s}'.format(self.type_x))
 
         if self.nd >= 2:
             print('Second Dimension: (y)')
@@ -76,13 +79,16 @@ class Grid():
             if self.Ly == None:
                 print('  Length of Domain: n/a')
             else:
-                print('  Length of Domain: {0:1.4e}'.format(self.Ly))
+                print('  Length of Domain: {0:1.3e}'.format(self.Ly))
 
             if self.ylim == None:
                print('  Bounds of Domain: n/a')
             else:
-                print('  Boundas of Domain: {0:1.4e}, {1:1.4e}'\
+                print('  Boundas of Domain: {0:1.3e}, {1:1.3e}'\
                       .format(self.ylim[0], self.ylim[1]))
+            
+            if hasattr(self, 'type_y'):
+                print('  Type: {0:s}'.format(self.type_y))
 
         if self.nd >=3:
             print('Third Dimension: (z)')
@@ -95,11 +101,15 @@ class Grid():
             if self.Lz == None:
                 print('  Length of Domain: n/a')
             else:
-                print('  Length of Domain: {0:1.4e}'.format(self.Lz))
+                print('  Length of Domain: {0:1.3e}'.format(self.Lz))
 
             if self.zlim == None:
                 print('  Bounds of Domain: n/a')
             else:
-                print('  Boundas of Domain: {0:1.4e}, {1:1.4e}'\
+                print('  Boundas of Domain: {0:1.3e}, {1:1.3e}'\
                       .format(self.zlim[0], self.zlim[1]))
+            
+            if hasattr(self, 'type_z'):
+                print('  Type: {0:s}'.format(self.type_z))
+
 ## ------
