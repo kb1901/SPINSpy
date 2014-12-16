@@ -1,3 +1,5 @@
+## Provides classes for the SPINSPY functions.
+
 ## Create some error classes
 ## ------
 class Error(Exception):
@@ -48,74 +50,31 @@ class Grid():
     def display(self):
         
         print('{0}-dimensional simulation:'.format(self.nd))
-
-        # If at least 1D, print x info
-        if self.nd >= 1:
-            print('  First Dimension: (x)')
+        ds = ['x','y','z']
+        for ind in range(3):
+            if self.nd > ind:
         
-            if self.Nx == None:
-                print('    Number of Points: n/a')
-            else:
-                print('    Number of Points: {0:d}'.format(self.Nx))
-        
-            if self.Lx == None:
-                print('    Length of Domain: n/a')
-            else:
-                print('    Length of Domain: {0:1.3e}'.format(self.Lx))
-
-            if self.xlim == None:
-                print('    Bounds of Domain: n/a')
-            else:
-                print('    Boundas of Domain: {0:1.3e}, {1:1.3e}'.format(self.xlim[0], self.xlim[1]))
-                    
-            if hasattr(self, 'type_x'):
-                print('    Type: {0:s}'.format(self.type_x))
-
-        # If at least 2D, print y info
-        if self.nd >= 2:
-            print('  Second Dimension: (y)')
-
-            if self.Ny == None:
-                print('    Number of Points: n/a')
-            else:
-                print('    Number of Points: {0:d}'.format(self.Ny))
-
-            if self.Ly == None:
-                print('    Length of Domain: n/a')
-            else:
-                print('    Length of Domain: {0:1.3e}'.format(self.Ly))
-
-            if self.ylim == None:
-                print('    Bounds of Domain: n/a')
-            else:
-                print('    Boundas of Domain: {0:1.3e}, {1:1.3e}'\
-                      .format(self.ylim[0], self.ylim[1]))
+                print('  {0}-Dimension:'.format(ds[ind]))
             
-            if hasattr(self, 'type_y'):
-                print('    Type: {0:s}'.format(self.type_y))
-
-        # If at least 3D, print z info
-        if self.nd >=3:
-            print('  Third Dimension: (z)')
-
-            if self.Nz == None:
-                print('    Number of Points: n/a')
-            else:
-                print('    Number of Points: {0:d}'.format(self.Nz))
-
-            if self.Lz == None:
-                print('    Length of Domain: n/a')
-            else:
-                print('    Length of Domain: {0:1.3e}'.format(self.Lz))
-
-            if self.zlim == None:
-                print('    Bounds of Domain: n/a')
-            else:
-                print('    Boundas of Domain: {0:1.3e}, {1:1.3e}'\
-                      .format(self.zlim[0], self.zlim[1]))
+                if getattr(self,'N'+ds[ind]) == None:
+                    print('    Number of Points: n/a')
+                else:
+                    print('    Number of Points: {0:d}'.format(getattr(self,'N'+ds[ind])))
             
-            if hasattr(self, 'type_z'):
-                print('    Type: {0:s}'.format(self.type_z))
+                if getattr(self,'L'+ds[ind]) == None:
+                    print('    Length of Domain: n/a')
+                else:
+                    print('    Length of Domain: {0:1.3e}'.format(getattr(self,'L'+ds[ind])))
+            
+                if getattr(self,ds[ind]+'lim') == None:
+                    print('    Bounds of Domain: n/a')
+                else:
+                    print('    Boundas of Domain: {0:1.3e}, {1:1.3e}'.format(\
+                                    getattr(self,ds[ind]+'lim')[0],\
+                                    getattr(self,ds[ind]+'lim')[1]))
+            
+                if hasattr(self, 'type_'+ds[ind]):
+                    print('    Type: {0:s}'.format(getattr(self, 'type_'+ds[ind])))
 
         # Print everything else
         param_str = 'Other parameters:'

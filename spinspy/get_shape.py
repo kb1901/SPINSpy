@@ -1,7 +1,18 @@
 from spinspy_classes import Grid
 import os
 
-## Determine field shapes
+## Determine simulation parameters
+## Purpose:
+##     If spins.conf exists
+##         parse spins.conf
+##     Else
+##         Use hard-coded values
+##
+## Usage:
+##     data = spinspy.get_shape()
+##
+##     data.display() prints a summary
+##                    of known values
 ## ------
 def get_shape():
 
@@ -55,6 +66,14 @@ def spinsconf_parser(grid_data):
 
     # Close the file.
     f.close()
+
+    # Double check that Nx,Ny,Nz have been assigned. If not, make them 1.
+    if not(hasattr(grid_data,'Nx')):
+        setattr(grid_data,'Nx',1)
+    if not(hasattr(grid_data,'Ny')):
+        setattr(grid_data,'Ny',1)
+    if not(hasattr(grid_data,'Nz')):
+        setattr(grid_data,'Nz',1)
 
     grid_data.Nx = int(grid_data.Nx)
     grid_data.Ny = int(grid_data.Ny)

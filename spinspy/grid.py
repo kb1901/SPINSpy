@@ -1,7 +1,10 @@
 from reader import reader
 from get_shape import get_shape
 
-## Read in the grid
+## Read in the grid as either vectors (1)
+## or full matrices (2).
+## (1) x,y[,z] = spinspy.grid()
+## (2) x,y[,z] = spinspy.grid(type='full')
 ## ------
 def grid(type='vector'):
     # This reads in the grid and produces a class

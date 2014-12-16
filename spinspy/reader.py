@@ -6,7 +6,29 @@ import warnings
 from spinspy_classes import SillyHumanError
 from get_shape import get_shape
 
-## Create reader files for SPINS outputs
+## Load SPINS outputs into numpy arrays.
+## Usage: field = spinspy.reader(var, *args, **kwargs)
+## Inputs:
+##    var: string indicating the field to be read, 'rho', 'x', etc.
+##    args: Required and ordered inputs.
+##        index: integer indicating output for non-grid fields
+##            i.e. 15 for to load field.15
+##        slicing: how to slice, one for each dimension
+##    kwargs: Optional keyword arguments
+##        type: 'ndarray' (default) or 'memmap'
+##              determines the output type
+##        ordering: 'natural' (default) or 'matlab'
+##              determines dimension ordering (x,y,z) vs (y,x,z)
+##
+## Examples:
+## 1) To load rho.15 for a full 3D grid
+##      rho = spinspy.reader('rho',15,[0,-1],[0,-1],[0,-1])
+## 2) To load rho.15 on a 3D grid but at first z
+##      rho = spinspy.reader('rho',15,[0,-1],[0,-1],0)
+## 3) To load x (grid) as a vector
+##        x = spinspy.reader('x',[0,-1],0,0)
+## 4) To load rho.15 on a 2D grid, but in matlab ordering
+##      rho = spinspy.reader('rho',15,[0,-1],[0,-1],ordering='matlab')
 ## ------
 def reader(var, *args, **kwargs):
     # This is a python version of the *_reader.m files
