@@ -1,4 +1,5 @@
 import matplotlib
+matplotlib.use('Agg')
 import matplotlib.cm as colmap
 import matplotlib.colors as mplc
 import matplotlib.pyplot as plt
