@@ -15,7 +15,8 @@ from get_shape import get_shape
 from grid import grid
 from reader import reader
 from spinspy_classes import Grid
+from get_diagnostics import get_diagnostics
 
 # Define what happens when someone uses
 # from matpy import *
-__all__ = ["get_shape", "grid", "reader", "spinspy_classes"]
+__all__ = ["get_shape", "grid", "reader", "spinspy_classes","get_diagnostics"]
