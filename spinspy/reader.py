@@ -5,6 +5,7 @@ import os
 import warnings
 from spinspy_classes import SillyHumanError
 from get_shape import get_shape
+from spinspy import local_data
 
 ## Load SPINS outputs into numpy arrays.
 ## Usage: field = spinspy.reader(var, *args, **kwargs)
@@ -30,6 +31,7 @@ from get_shape import get_shape
 ## 4) To load rho.15 on a 2D grid, but in matlab ordering
 ##      rho = spinspy.reader('rho',15,[0,-1],[0,-1],ordering='matlab')
 ## ------
+
 def reader(var, *args, **kwargs):
     # This is a python version of the *_reader.m files
     # produced my SPINS for the purpose of parsing SPINS
@@ -123,9 +125,9 @@ def reader(var, *args, **kwargs):
 
     # File to load
     if (var == 'x') | (var == 'y') | (var == 'z'):
-        fname = '{0:s}grid'.format(var)
+        fname = '{0:s}{1:s}grid'.format(local_data.prefix,var)
     else:
-        fname = '{0:s}.{1:d}'.format(var,seq)
+        fname = '{0:s}{1:s}.{2:d}'.format(local_data.prefix,var,seq)
 
     # Does the requested file exist?
     if not(os.path.isfile(fname)):

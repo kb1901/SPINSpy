@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+from spinspy import local_data
 
 ## -----------------
 ## Class for diagnostics
@@ -17,6 +18,8 @@ def get_diagnostics(fp = 'diagnostics.txt'):
     
     # Start by seeing how many lines there are
     num_lines = sum(1 for line in open(fp)) - 1
+
+    fp = '{0:s}{1:s}'.format(local_data.prefix,fp)
 
     fid = open(fp, 'r')
     

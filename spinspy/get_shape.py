@@ -1,5 +1,6 @@
 from spinspy_classes import Grid
 import os
+from spinspy import local_data
 
 ## Determine simulation parameters
 ## Purpose:
@@ -20,7 +21,8 @@ def get_shape():
     
     # Check if a spins.conf file exists,
     # if it does, parse it.
-    if os.path.isfile('spins.conf'):
+    conf_path = '{0:s}spins.conf'.format(local_data.prefix)
+    if os.path.isfile(conf_path):
     
         grid_data = spinsconf_parser(grid_data)
     
@@ -41,7 +43,8 @@ def get_shape():
 ## ------
 def spinsconf_parser(grid_data):
     # Open the file for reading only.
-    f = open('spins.conf', 'r')
+    conf_path = '{0:s}spins.conf'.format(local_data.prefix)
+    f = open(conf_path, 'r')
 
     # Loop through each line, parsing as we go.
     # Each line is assumed to be of the form
