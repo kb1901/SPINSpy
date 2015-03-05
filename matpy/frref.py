@@ -4,50 +4,115 @@ import scipy
 import scipy.sparse as sp
 import scipy.linalg as splg
 
-def frref(A, tol = 1e-10):
+def frref(A, tol = 1e-20):
     m = A.shape[0]
     n = A.shape[1]
     
     if sp.issparse(A):
         use_sparse = True
-        r = nlg.qr(A.todense(), mode = 'r')
+        r = splg.qr(A.todense(), mode = 'r')
     else:
         use_sparse = False
-        r = nlg.qr(A, mode = 'r')
-    print(r)
+        r = splg.qr(A, mode = 'r')[0]
+        #r = splg.qr(A, mode = 'r', pivoting=True)[0]
+        #r = nlg.qr(A, mode = 'r')
 
-    r[abs(r) < tol] = 0
+    r[np.abs(r) < tol] = 0
+    #print(r)
 
-    indep_rows = (r!=0).max(axis=1)
+    np.set_printoptions(linewidth=200)
+    tmp = np.argmax(np.abs(r) > tol, axis=1)
+
+    indep_rows = (np.abs(r) > tol).max(axis=1)
     indep_rows = np.ravel(indep_rows)
 
-    i_dep = np.nonzero(indep_rows)[0]
-    i_indep = np.nonzero(1-indep_rows)[0]
+    i_dep   = tmp[indep_rows]
+    i_dep   = np.unique(i_dep)
+    i_indep = np.setdiff1d(np.arange(n), i_dep)
 
-    L_indep = np.min(i_indep.shape)
-    L_dep   = np.min(i_dep.shape)
+    #print(i_dep)
+    #print(i_indep)
 
+    L_indep = len(i_indep)
+    L_dep   = len(i_dep)
+
+    #print(indep_rows)
     indep_rows = np.arange(len(indep_rows))[indep_rows]
+    #print(indep_rows)
 
-    F = sp.lil_matrix((m,n))
+    # When there are more elements than conditions.
+    # we need to add some `filler' conditions. 
+    if n < m:
+        F = sp.lil_matrix((m,n))
+    else:
+        F = sp.lil_matrix((n,n))
+    #print(F.shape, A.shape, r.shape)
     
     if L_indep != 0:
+        lf = r[indep_rows,:][:,i_dep]
+        rg = r[indep_rows,:][:,i_indep]
+
+        #print(lf)
+        #print(rg)
+
         tmp = nlg.lstsq(r[indep_rows,:][:,i_dep],\
                         r[indep_rows,:][:,i_indep])[0]
+        ii,jj = np.meshgrid(i_dep,i_indep)
 
-        ii,jj = np.meshgrid(indep_rows,i_indep)
-
+        #print(ii.ravel().shape)
+        #print(jj.ravel().shape)
+        #print(tmp.shape)
         F[np.ravel(ii),np.ravel(jj)] = np.ravel(tmp)
     
     if L_dep != 0:
-        F[indep_rows,i_dep] = np.ones(L_dep)
-    
+        F[i_dep,i_dep] = np.ones(L_dep)
+
+    #print(F.todense())
+    # Now remove some of the `filler' conditions
+    if n > m:
+        nz_row,nz_col = F.nonzero()
+        nz_row = np.unique(nz_row)
+        nz_row = np.setdiff1d(np.arange(n), nz_row)
+        nz_row = nz_row[0:n-m]
+        #print(nz_row)
+        delete_row_lil(F,nz_row)
+
     if use_sparse:
         F.tocsr()
     else:
         F = F.todense()
-    
+   
+    #print(F)
     return F
+
+# Define a function that deletes rows from sparse LIL matrices
+def delete_row_lil(mat, inds):
+    if not isinstance(mat, scipy.sparse.lil_matrix):
+        raise ValueError("works only for LIL format -- use .tolil() first")
+
+    if isinstance(inds, type(np.zeros((2,2)))):
+        # Sort the indices to be careful
+        inds = inds.ravel()
+        inds.sort()
+        inds[:] = inds[::-1]
+        for i in inds:
+            mat.rows = np.delete(mat.rows, i)
+            mat.data = np.delete(mat.data, i)
+            mat._shape = (mat._shape[0] - 1, mat._shape[1])
+    elif isinstance(inds, type([0])):
+        # Sort to be careful
+        inds.sort()
+        inds[:] = inds[::-1]
+        for i in inds:
+            mat.rows = np.delete(mat.rows, i)
+            mat.data = np.delete(mat.data, i)
+            mat._shape = (mat._shape[0] - 1, mat._shape[1])
+    elif isinstance(inds, type(1)):
+        mat.rows = np.delete(mat.rows, i)
+        mat.data = np.delete(mat.data, i)
+        mat._shape = (mat._shape[0] - 1, mat._shape[1])
+    else:
+        raise ValueError("inds must either be an integer, list, or 1D numpy array")
 
 
 if __name__ == '__main__':
@@ -56,17 +121,19 @@ if __name__ == '__main__':
     X2 = np.array([[1,2,3],[1,2,4],[3,2,1]])
     X3 = np.array([[1.,2.,3.],[1.,2.,3.],[3.,2.,1.]])
 
-    X4 = sp.lil_matrix((10,10))
-    X4[0,0:2]  = [1,1]
-    X4[1,0:2]  = [1,1]
-    X4[2,2]    = 1
-    X4[3,1:4]  = [1,2,3]
-    X4[4,2:5]  = [1,2,3]
-    X4[5,3:6]  = [1,2,3]
-    X4[6,4:7]  = [1,2,3]
-    X4[7,5:8]  = [1,2,3]
-    X4[8,6:9]  = [1,2,3]
-    X4[9,7:10] = [1,2,3]
+
+    X4 = np.array([[ 0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.],
+                   [ 0.,  0.,  0.,  0.,  0.,  1.,  0.,  0.,  0.],
+                   [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.],
+                   [ 1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
+                   [ 0.,  0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.],
+                   [ 0.,  0.,  0.,  0.,  0.,  0.,  1.,  0.,  0.],
+                   [ 0.,  0.,  0.,  0.,  0.,  0.,  1.,  0.,  0.],
+                   [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.,  0.],
+                   [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.],
+                   [ 1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
+                   [ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
+                   [ 0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.]])
 
     np.set_printoptions(precision=3)
 
@@ -87,7 +154,7 @@ if __name__ == '__main__':
 
     Y4 = frref(X4)
     print('X4 -> Y4')
-    print(X4.todense())
-    print(Y4.todense())
+    print(X4)
+    print(Y4)
 
 
