@@ -1,4 +1,4 @@
-from spinspy_classes import Grid
+from spinspy_classes import Grid, SillyHumanError
 import os
 from spinspy import local_data
 
@@ -7,7 +7,7 @@ from spinspy import local_data
 ##     If spins.conf exists
 ##         parse spins.conf
 ##     Else
-##         Use hard-coded values
+##         Raise error
 ##
 ## Usage:
 ##     data = spinspy.get_shape()
@@ -27,13 +27,9 @@ def get_shape():
         grid_data = spinsconf_parser(grid_data)
     
     else:
-        
-        # Hard-coded back-up
-        grid_data.nd = 3
-    
-        grid_data.Nx = 3072
-        grid_data.Ny = 192
-        grid_data.Nz = 192
+       
+        msg = 'Cannot locate {0:s}. Create a spins.conf and try again.'.format(conf_path)
+        raise SillyHumanError(msg)
 
     return grid_data
 ## ------
