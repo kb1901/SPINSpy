@@ -15,11 +15,11 @@ class Diagnostic:
 ## ------------------
 ## get_diagnostics: Parse diagnostics.txt
 def get_diagnostics(fp = 'diagnostics.txt'):
-    
+   
+    fp = '{0:s}{1:s}'.format(local_data.prefix,fp)
+
     # Start by seeing how many lines there are
     num_lines = sum(1 for line in open(fp)) - 1
-
-    fp = '{0:s}{1:s}'.format(local_data.prefix,fp)
 
     fid = open(fp, 'r')
     
