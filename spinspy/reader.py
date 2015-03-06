@@ -13,7 +13,7 @@ from spinspy import local_data
 ##    var: string indicating the field to be read, 'rho', 'x', etc.
 ##    args: Required and ordered inputs.
 ##        index: integer indicating output for non-grid fields
-##            i.e. 15 for to load field.15
+##            i.e. 15 to load field.15
 ##        slicing: how to slice, one for each dimension
 ##    kwargs: Optional keyword arguments
 ##        type: 'ndarray' (default) or 'memmap'

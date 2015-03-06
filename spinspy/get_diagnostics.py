@@ -13,7 +13,14 @@ class Diagnostic:
 
 
 ## ------------------
-## get_diagnostics: Parse diagnostics.txt
+## Purpose: Parse diagnostics.txt and return a
+##          class that contains each diagnostic
+##          variable.
+## Inputs:
+##    fp (optional): Specifies the filename of
+##                   of the diagnostics file.
+## Usage: 
+##    diag = spinspy.get_diagnostics()
 def get_diagnostics(fp = 'diagnostics.txt'):
    
     fp = '{0:s}{1:s}'.format(local_data.prefix,fp)
