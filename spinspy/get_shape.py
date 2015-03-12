@@ -1,12 +1,13 @@
-from spinspy_classes import Grid
+from spinspy_classes import Grid, SillyHumanError
 import os
+from spinspy import local_data
 
 ## Determine simulation parameters
 ## Purpose:
 ##     If spins.conf exists
 ##         parse spins.conf
 ##     Else
-##         Use hard-coded values
+##         Raise error
 ##
 ## Usage:
 ##     data = spinspy.get_shape()
@@ -20,18 +21,15 @@ def get_shape():
     
     # Check if a spins.conf file exists,
     # if it does, parse it.
-    if os.path.isfile('spins.conf'):
+    conf_path = '{0:s}spins.conf'.format(local_data.prefix)
+    if os.path.isfile(conf_path):
     
         grid_data = spinsconf_parser(grid_data)
     
     else:
-        
-        # Hard-coded back-up
-        grid_data.nd = 3
-    
-        grid_data.Nx = 3072
-        grid_data.Ny = 192
-        grid_data.Nz = 192
+       
+        msg = 'Cannot locate {0:s}. Create a spins.conf and try again.'.format(conf_path)
+        raise SillyHumanError(msg)
 
     return grid_data
 ## ------
@@ -41,7 +39,8 @@ def get_shape():
 ## ------
 def spinsconf_parser(grid_data):
     # Open the file for reading only.
-    f = open('spins.conf', 'r')
+    conf_path = '{0:s}spins.conf'.format(local_data.prefix)
+    f = open(conf_path, 'r')
 
     # Loop through each line, parsing as we go.
     # Each line is assumed to be of the form
