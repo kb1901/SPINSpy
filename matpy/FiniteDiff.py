@@ -7,7 +7,7 @@ import scipy.linalg as spalg
 
 ## FiniteDiff computes FD matrices
 ## ------
-def FiniteDiff(x, n, spb=True, uniform=True):
+def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1):
 
     #FiniteDiff : Create a finite difference matrix of arbitrary order for an
     #arbitrary grid.
@@ -19,7 +19,13 @@ def FiniteDiff(x, n, spb=True, uniform=True):
         Nx = x[2]
     else:
         Nx = len(x)
-    
+
+    # Adjust for higher order derivatives
+    n = n + (DiffOrd - 1)
+    if DiffOrd == 0:
+        Dx = np.eye((Nx,Nx))
+        return Dx
+
     if spb:
         Dx = sp.lil_matrix((Nx, Nx))
     else:
@@ -40,7 +46,7 @@ def FiniteDiff(x, n, spb=True, uniform=True):
             for j in range(0,n+1):
                 A[:,j] = np.power(((j-i)*dx)*np.ones([1,n+1]),range(0,n+1))/factorial(range(0,n+1))
             b = np.zeros(n+1)
-            b[1] = 1
+            b[DiffOrd] = 1
             coeff = nlg.solve(A,b)
             coeff = coeff.conj().transpose()
             Dx[i, 0:n+1] = coeff
@@ -50,7 +56,7 @@ def FiniteDiff(x, n, spb=True, uniform=True):
             for j in range(Nx-n-1,Nx):
                 A[:,j-Nx+n+1] = np.power(((j-i)*dx)*np.ones([1,n+1]),range(0,n+1))/factorial(range(0,n+1))
             b = np.zeros(n+1)
-            b[1] = 1
+            b[DiffOrd] = 1
             coeff = nlg.solve(A,b)
             coeff = coeff.conj().transpose()
             Dx[i, Nx-n-1:Nx] = coeff
@@ -61,7 +67,7 @@ def FiniteDiff(x, n, spb=True, uniform=True):
             for j in range(-n/2-1,n/2):
                 A[:,j+n/2+1] = np.power(((j+1)*dx)*np.ones([1,n+1]),range(0,n+1))/factorial(range(0,n+1))
             b = np.zeros(n+1)
-            b[1] = 1
+            b[DiffOrd] = 1
             #print A
             #print b
             coeff = nlg.solve(A,b)
@@ -74,7 +80,7 @@ def FiniteDiff(x, n, spb=True, uniform=True):
                 np.power(j*dx*np.ones([1,n+1]),range(0,n+1))\
                     /factorial(range(0,n+1))
             b = np.zeros(n+1)
-            b[1] = 1;
+            b[DiffOrd] = 1
             coeff = nlg.solve(A,b)
             coeff = coeff.conj().transpose()
             coeff = np.tile(coeff, [Nx, 1])
@@ -89,7 +95,7 @@ def FiniteDiff(x, n, spb=True, uniform=True):
                     dx = x[j]-x[i]
                     A[:,j] = (dx**range(0,n+1))/factorial(range(0,n+1))
                 b = np.zeros(n+1)
-                b[1] = 1
+                b[DiffOrd] = 1
                 coeff = nlg.solve(A,b)
                 coeff = coeff.conj().transpose()
                 Dx[i, 0:n+1] = coeff
@@ -101,7 +107,7 @@ def FiniteDiff(x, n, spb=True, uniform=True):
                     dx = x[j]-x[i]
                     A[:,j-Nx+n+1] = (dx**range(0,n+1))/factorial(range(0,n+1));
                 b = np.zeros(n+1)
-                b[1] = 1
+                b[DiffOrd] = 1
                 coeff = nlg.solve(A,b)
                 coeff = coeff.conj().transpose()
                 Dx[i, Nx-n-1:Nx] = coeff
@@ -114,7 +120,7 @@ def FiniteDiff(x, n, spb=True, uniform=True):
                         dx = x[i+j] - x[i]
                         A[:,j+n/2] = (dx**range(0,n+1))/factorial(range(0,n+1))
                     b = np.zeros(n+1)
-                    b[1] = 1;
+                    b[DiffOrd] = 1;
                     coeff = nlg.solve(A,b)
                     coeff = coeff.conj().transpose()
                     Dx[i, i-n/2:i+n/2+1] = coeff
@@ -132,7 +138,7 @@ def FiniteDiff(x, n, spb=True, uniform=True):
                             dx = x[i+j] - x[i]
                             A[:,j+FLn] = (dx**range(0,n+1))/factorial(range(0,n+1))
                         b = np.zeros(n+1)
-                        b[1] = 1
+                        b[DiffOrd] = 1
                         coeff = nlg.solve(A,b)
                         coeff = coeff.conj().transpose()
                         Dx[i, i-FLn:i+CLn+1] = coeff
@@ -144,7 +150,7 @@ def FiniteDiff(x, n, spb=True, uniform=True):
                             dx = x[i+j] - x[i]
                             A[:,j+CLn] = (dx**range(0,n+1))/factorial(range(0,n+1))
                         b = np.zeros(n+1)
-                        b[1] = 1
+                        b[DiffOrd] = 1
                         coeff = nlg.solve(A,b)
                         coeff = coeff.conj().transpose()
                         Dx[i, i-CLn:i+CLn] = coeff
