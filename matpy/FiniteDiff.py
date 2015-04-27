@@ -1,13 +1,13 @@
 import numpy as np
 import numpy.linalg as nlg
-import scipy
+#import scipy
 import scipy.sparse as sp
 from scipy.misc import factorial
-import scipy.linalg as spalg
+#import scipy.linalg as spalg
 
 ## FiniteDiff computes FD matrices
 ## ------
-def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1):
+def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1, Periodic=False):
 
     #FiniteDiff : Create a finite difference matrix of arbitrary order for an
     #arbitrary grid.
@@ -30,7 +30,11 @@ def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1):
         Dx = sp.lil_matrix((Nx, Nx))
     else:
         Dx = np.zeros([Nx, Nx])
-    
+
+    n2 = int(n/2.0)
+    cn2 = int(np.ceil(n/2.0))
+    fn2 = int(np.floor(n/2.0))
+
     if uniform:
         if len(x) == 3:
             # Using a length of 3 is shorthand. x = [a,b,c] is interpreted as
@@ -41,25 +45,26 @@ def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1):
             dx = x[1] - x[0];
         
         # Deal with boundary issues
-        for i in range(0,int(np.ceil(n/2.0))):
-            A = np.zeros([n+1,n+1])
-            for j in range(0,n+1):
-                A[:,j] = np.power(((j-i)*dx)*np.ones([1,n+1]),range(0,n+1))/factorial(range(0,n+1))
-            b = np.zeros(n+1)
-            b[DiffOrd] = 1
-            coeff = nlg.solve(A,b)
-            coeff = coeff.conj().transpose()
-            Dx[i, 0:n+1] = coeff
+        if not(Periodic):
+            for i in range(0,cn2):
+                A = np.zeros([n+1,n+1])
+                for j in range(0,n+1):
+                    A[:,j] = np.power(((j-i)*dx)*np.ones([1,n+1]),range(0,n+1))/factorial(range(0,n+1))
+                b = np.zeros(n+1)
+                b[DiffOrd] = 1
+                coeff = nlg.solve(A,b)
+                coeff = coeff.conj().transpose()
+                Dx[i, 0:n+1] = coeff
         
-        for i in range(Nx-int(np.ceil(n/2)),Nx):
-            A = np.zeros([n+1,n+1])
-            for j in range(Nx-n-1,Nx):
-                A[:,j-Nx+n+1] = np.power(((j-i)*dx)*np.ones([1,n+1]),range(0,n+1))/factorial(range(0,n+1))
-            b = np.zeros(n+1)
-            b[DiffOrd] = 1
-            coeff = nlg.solve(A,b)
-            coeff = coeff.conj().transpose()
-            Dx[i, Nx-n-1:Nx] = coeff
+            for i in range(Nx-cn2,Nx):
+                A = np.zeros([n+1,n+1])
+                for j in range(Nx-n-1,Nx):
+                    A[:,j-Nx+n+1] = np.power(((j-i)*dx)*np.ones([1,n+1]),range(0,n+1))/factorial(range(0,n+1))
+                b = np.zeros(n+1)
+                b[DiffOrd] = 1
+                coeff = nlg.solve(A,b)
+                coeff = coeff.conj().transpose()
+                Dx[i, Nx-n-1:Nx] = coeff
         
         # Now do the internals.
         A = np.zeros([n+1,n+1])
@@ -68,24 +73,40 @@ def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1):
                 A[:,j+n/2+1] = np.power(((j+1)*dx)*np.ones([1,n+1]),range(0,n+1))/factorial(range(0,n+1))
             b = np.zeros(n+1)
             b[DiffOrd] = 1
-            #print A
-            #print b
             coeff = nlg.solve(A,b)
             coeff = coeff.conj().transpose()
-            coeff = np.tile(coeff, [Nx, 1])
-            Dx[n/2:Nx-n/2,:] = sp.spdiags(coeff.T, range(0,n+1), Nx-n, Nx).todense()
+           
+            if not(Periodic):
+                coeff = np.tile(coeff, [Nx, 1])
+                Dx[n/2:Nx-n/2,:] = sp.spdiags(coeff.T, range(0,n+1), Nx-n, Nx).todense()
+           
+            if Periodic:
+                Dx += sp.diags(coeff,range(-n2,n2+1),shape=(Nx,Nx)).todense()
+                for j in range(1,n2+1):
+                    Dx += sp.diags([coeff[n2-j]],Nx-j,shape=(Nx,Nx)).todense()
+                    Dx += sp.diags([coeff[n2+j]],j-Nx,shape=(Nx,Nx)).todense()
         elif n % 2 == 1: # If odd...
-            for j in range(int(-np.floor(n/2.0))-1,int(np.ceil(n/2.0))):
-                A[:,j+int(np.floor(n/2.0))+1] = \
+            for j in range(-fn2-1,cn2):
+                A[:,j+fn2+1] = \
                 np.power(j*dx*np.ones([1,n+1]),range(0,n+1))\
                     /factorial(range(0,n+1))
             b = np.zeros(n+1)
             b[DiffOrd] = 1
             coeff = nlg.solve(A,b)
             coeff = coeff.conj().transpose()
-            coeff = np.tile(coeff, [Nx, 1])
-            Dx[int(np.ceil(n/2.0)):Nx-int(np.floor(n/2.0)),:] = sp.spdiags(coeff.T, range(0,n+1), Nx-n, Nx).todense()
-    else:
+
+            if not(Periodic):
+                coeff = np.tile(coeff, [Nx, 1])
+                Dx[cn2:Nx-fn2,:] = sp.spdiags(coeff.T, range(0,n+1), Nx-n, Nx).todense()
+
+            if Periodic:
+                Dx += sp.diags(coeff,range(-cn2,cn2),shape=(Nx,Nx)).todense()
+                for j in range(1,cn2+1):
+                    Dx += sp.diags([coeff[cn2-j]],Nx-j,shape=(Nx,Nx)).todense()
+                for j in range(-1,-cn2,-1):
+                    Dx += sp.diags([coeff[cn2-j]],-j-Nx,shape=(Nx,Nx)).todense()
+                    
+    else: # If not uniform
         for i in range(0,Nx):
             if i < np.ceil(n/2.0):
                 # Deal with 'left' boundary issues
