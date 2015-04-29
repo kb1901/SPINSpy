@@ -10,11 +10,11 @@ from scipy.misc import factorial
 ## Dr = FiniteDiff(x, Nx, kwargs)
 ## ------
 #
-# kwargs:
-#   spb = {True,False}      # Whether or not to return sparse form
-#   uniform = {True, False} # If domain is uniform
-#   DiffOrd = integer       # Which derivative (i.e. 1 = 1st, 2 = 2nd)
-#   Periodic = {True False} # If domain is periodic
+# kwargs: [default]
+#   spb = {[True],False}      # Whether or not to return sparse form
+#   uniform = {[True], False} # If domain is uniform
+#   DiffOrd = integer [2]       # Which derivative (i.e. 1 = 1st, 2 = 2nd)
+#   Periodic = {True, [False]} # If domain is periodic
 #
 ## Notes
 #
