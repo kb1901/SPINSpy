@@ -1,4 +1,6 @@
 # Initialization for package.
+__author__ = "Ben Storer <bastorer@uwaterloo.ca>"
+__date__   = "29th of April, 2015"
 
 # Read in the defined functions. Not strictly necessary,
 # but makes usage nicer. i.e. now we can use
