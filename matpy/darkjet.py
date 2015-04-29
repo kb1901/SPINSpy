@@ -21,8 +21,8 @@ col_list = col_list*darken # Apply the darkening
 
 # Matplotlib defaults to rgba, not rgb. 
 # Reset the transparency values now.
-col_list[:,3] = 1
+col_list[:,3] = 1.
 
-darkjet = mplc.ListedColormap(col_list*darken, 'darkjet', 256)
+darkjet = mplc.ListedColormap(col_list, 'darkjet', 256)
 plt.register_cmap(cmap=darkjet)
 ## ------
