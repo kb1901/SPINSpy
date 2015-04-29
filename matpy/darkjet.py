@@ -1,3 +1,9 @@
+import matplotlib
+import os
+# Check to see if DISPLAY variable set, if not
+# then use the Agg background
+if not(os.environ["DISPLAY"]):
+    matplotlib.use('Agg')
 import matplotlib.cm as colmap
 import matplotlib.colors as mplc
 import matplotlib.pyplot as plt
