@@ -7,6 +7,18 @@ from scipy.misc import factorial
 
 ## FiniteDiff computes FD matrices
 ## ------
+## Dr = FiniteDiff(x, Nx, kwargs)
+## ------
+#
+# kwargs:
+#   spb = {True,False}      # Whether or not to return sparse form
+#   uniform = {True, False} # If domain is uniform
+#   DiffOrd = integer       # Which derivative (i.e. 1 = 1st, 2 = 2nd)
+#   Periodic = {True False} # If domain is periodic
+#
+## Notes
+#
+#   Periodic option is only available for uniform domains.
 def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1, Periodic=False):
 
     #FiniteDiff : Create a finite difference matrix of arbitrary order for an

@@ -2,10 +2,11 @@ import numpy as np
 
 ## CHEB computes the Chebyshev differentiation matrix
 ## ------
+## Dx,x = cheb(Nx)
+## ------
 #    matrix on N+1 points (i.e. N intervals)
 #    D = differentiation matrix
 #    x = Chebyshev grid
-
 def cheb(N):
     if N == 0:
         D = 0
