@@ -2,11 +2,17 @@ import numpy as np
 
 ## CHEB computes the Chebyshev differentiation matrix
 ## ------
-#    matrix on N+1 points (i.e. N intervals)
-#    D = differentiation matrix
-#    x = Chebyshev grid
-
-def cheb(N):
+## Dx,x = cheb(Nx, kwargs)
+## ------
+#    matrix on Nx+1 points (i.e. Nx intervals)
+#    Dx = differentiation matrix
+#    x = Chebyshes grid on [-1,1]
+##
+#  kwargs:
+#     xlims = [a,b] # Desired limits on x
+#           a,b real numbers
+#           default = [-1,1]
+def cheb(N, xlims=[-1,1]):
     if N == 0:
         D = 0
         x = 1
@@ -19,5 +25,10 @@ def cheb(N):
         dX = X-(X.conj().transpose())
         D  = (c*(1/c).conj().transpose())/(dX+(np.eye(N+1)))   # off-diagonal entries
         D  = D - np.diag(np.sum(D,1))   # diagonal entries
+
+    # Now implement xlims
+    x = xlims[0] + (xlims[1]-xlims[0])*(x + 1.)/2.
+    D = D*2./(xlims[1]-xlims[0])
+
     return D,x
 ## ------
