@@ -60,7 +60,7 @@ def spinsconf_parser(grid_data):
         # strip removes any leading and trailing whitespace
         var = line[0:var_len].strip()
         try:
-            val = float(line[var_len+1:line_len-2].strip())
+            val = float(line[var_len+1:line_len-1].strip())
         except:
             val = line[var_len+1:line_len].strip()
     
