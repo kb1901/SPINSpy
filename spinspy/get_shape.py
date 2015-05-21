@@ -23,9 +23,12 @@ def get_shape():
     # if it does, parse it.
     conf_path = '{0:s}spins.conf'.format(local_data.prefix)
     if os.path.isfile(conf_path):
-    
-        grid_data = spinsconf_parser(grid_data)
-    
+        try:
+            grid_data = spinsconf_parser(grid_data)
+        except:
+            msg = 'Failed to read grid shape. Put grid shape in spins.conf.'
+            raise SillyHumanError(msg)
+
     else:
        
         msg = 'Cannot locate {0:s}. Create a spins.conf and try again.'.format(conf_path)

@@ -75,9 +75,12 @@ def reader(var, *args, **kwargs):
     #       options:
     #           'natural' (default): [x,y,z] ordering
     #           'matlab': [y,x,z] ordering
-    
-    grid_data = get_shape()
-    
+    try: 
+        grid_data = get_shape()
+    except:
+        err_msg = 'Failed to read spins.conf for grid shape.' 
+        raise SillyHumanError(err_msg)
+
     # Parse args
     nargs = len(args)
     if (var == 'x') | (var == 'y') | (var == 'z'):
