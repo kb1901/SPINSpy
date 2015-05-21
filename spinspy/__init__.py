@@ -5,7 +5,7 @@
 #   along with basic usage information.
 
 __author__ = "Ben Storer <bastorer@uwaterloo.ca>"
-__date__   = "16th of December, 2014"
+__date__   = "29th of April, 2015"
 
 # Create a grid Grid instance for storing information
 from spinspy_classes import Grid
