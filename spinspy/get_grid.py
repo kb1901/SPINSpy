@@ -1,5 +1,5 @@
 from reader import reader
-from get_shape import get_shape
+from get_params import get_params
 from isdim import isdim
 
 ## Read in the grid as either vectors (1)
@@ -7,9 +7,9 @@ from isdim import isdim
 ## (1) x,y[,z] = spinspy.grid()
 ## (2) x,y[,z] = spinspy.grid(type='full')
 ## ------
-def grid(type='vector'):
+def get_grid(type='vector'):
     
-    grid_data = get_shape()
+    grid_data = get_params()
 
     if grid_data.nd == 2:
         sel1 = ([0,-1],0)

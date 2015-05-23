@@ -4,7 +4,7 @@ import collections
 import os
 import warnings
 from spinspy_classes import SillyHumanError
-from get_shape import get_shape
+from get_params import get_params
 from spinspy import local_data
 
 ## Load SPINS outputs into numpy arrays.
@@ -76,7 +76,7 @@ def reader(var, *args, **kwargs):
     #           'natural' (default): [x,y,z] ordering
     #           'matlab': [y,x,z] ordering
     try: 
-        grid_data = get_shape()
+        grid_data = get_params()
     except:
         err_msg = 'Failed to read spins.conf for grid shape.' 
         raise SillyHumanError(err_msg)
@@ -128,9 +128,9 @@ def reader(var, *args, **kwargs):
 
     # File to load
     if (var == 'x') | (var == 'y') | (var == 'z'):
-        fname = '{0:s}{1:s}grid'.format(local_data.prefix,var)
+        fname = '{0:s}{1:s}grid'.format(local_data.path,var)
     else:
-        fname = '{0:s}{1:s}.{2:d}'.format(local_data.prefix,var,seq)
+        fname = '{0:s}{1:s}.{2:d}'.format(local_data.path,var,seq)
 
     # Does the requested file exist?
     if not(os.path.isfile(fname)):

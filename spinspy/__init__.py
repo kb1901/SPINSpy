@@ -5,24 +5,26 @@
 #   along with basic usage information.
 
 __author__ = "Ben Storer <bastorer@uwaterloo.ca>"
-__date__   = "29th of April, 2015"
+__date__   = "22th of May, 2015"
 
-# Create a grid Grid instance for storing information
-from spinspy_classes import Grid
-local_data = Grid()
-local_data.prefix = ''
+# Create a Params instance for storing information
+from spinspy_classes import Params
+local_data = Params()
+local_data.path = ''
 
 # Initialization file for package.
 # Read in the defined functions. Not strictly necessary,
 # but makes usage nicer. i.e. now we can use
 # spinspy.grid() instead of spinspy.grid.grid().
-from get_shape import get_shape
-from grid import grid
+from get_params import get_params
+from get_grid import get_grid
+from get_paramgrid import get_paramgrid
 from reader import reader
 from get_diagnostics import get_diagnostics
-from set_prefix import set_prefix
-from grid_diagnostic  import grid_diagnostic
+from set_path import set_path
+from plot2d import plot2d
+from nearestindex import nearestindex
 
 # Define what happens when someone uses
 # from matpy import *
-__all__ = ["get_shape", "grid", "reader", "spinspy_classes","get_diagnostics","grid_diagnostic"]
+__all__ = ["spinspy_classes", "get_params", "get_grid", "get_paramgrid", "reader", "get_diagnostics", "set_path","plot2d", "nearestindex"]
