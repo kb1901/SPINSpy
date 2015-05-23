@@ -5,9 +5,9 @@ from isdim import isdim
 ## Read in the grid as either vectors (1)
 ## or full matrices (2).
 ## (1) x,y[,z] = spinspy.grid()
-## (2) x,y[,z] = spinspy.grid(type='full')
+## (2) x,y[,z] = spinspy.grid(style='full')
 ## ------
-def get_grid(type='vector'):
+def get_grid(style='vector'):
     
     grid_data = get_params()
 
@@ -15,7 +15,7 @@ def get_grid(type='vector'):
         sel1 = ([0,-1],0)
         sel2 = (0,[0,-1])
         sel3 = ([0,-1], [0,-1])
-        if type == 'vector':
+        if style == 'vector':
             if isdim('x'):
                 X1 = reader('x', *sel1)
                 if isdim('y'):
@@ -25,7 +25,7 @@ def get_grid(type='vector'):
             else:
                 X1 = reader('y', *sel1)
                 X2 = reader('z', *sel2)
-        elif type == 'full':
+        elif style == 'full':
             if isdim('x'):
                 X1 = reader('x',*sel3)
                 if isdim('y'):
@@ -36,11 +36,11 @@ def get_grid(type='vector'):
                 X1 = reader('y', *sel3)
                 X2 = reader('z', *sel3)
     if grid_data.nd == 3:
-        if type == 'vector':
+        if style == 'vector':
             x = reader('x', [0,-1],0,0)
             y = reader('y', 0,[0,-1],0)
             z = reader('z', 0,0,[0,-1])
-        elif type == 'full':
+        elif style == 'full':
             x = reader('x', [0,-1],[0,-1],[0,-1])
             y = reader('y', [0,-1],[0,-1],[0,-1])
             z = reader('z', [0,-1],[0,-1],[0,-1])

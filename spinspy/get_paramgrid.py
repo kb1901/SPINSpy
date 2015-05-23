@@ -11,12 +11,12 @@ import spinspy as spy
 ##     paramgrid = spinspy.get_paramgrid()
 ## ------
 
-# need to test on 2D and if grid type is full
+# need to test on 2D and if grid style is full
 
-def get_paramgrid(type='vector'):
+def get_paramgrid(style='vector'):
     # read parameters and grid
     params = spy.get_params()
-    gd = spy.get_grid(type)    # gd = x,[y],z
+    gd = spy.get_grid(style=style)    # gd = x,[y],z
     x = gd[0]
     z = gd[-1]
     Nz = params.Nz
@@ -34,7 +34,7 @@ def get_paramgrid(type='vector'):
     elif params.nd == 2:
         print('Data is 2 dimensional.')
 
-    # check for vertical expansion type
+    # check for vertical expansion style
     if np.abs((z[Nz/2]-z[Nz/2-1])/(z[1]-z[0])) > 2:
         print('Chebyshev grid in z.')
         # define clenshaw curtis weights here?
