@@ -95,14 +95,19 @@ def reader(var, *args, **kwargs):
             pass
     else:
         seq = args[0]
-        xs = args[1]
-        ys = args[2]
-        if nargs == 4:
-            # 4 -> 3D (less one for seq)
-            zs = args[3]
-        elif nargs == 3:
-            # 3 -> 2D (less one for seq)
-            pass
+        if nargs == 1:
+            # If only gave var and seq, assume full domain
+            xs = [0,-1]
+            ys = [0,-1]
+        else:
+            xs = args[1]
+            ys = args[2]
+            if nargs == 4:
+                # 4 -> 3D (less one for seq)
+                zs = args[3]
+            elif nargs == 3:
+                # 3 -> 2D (less one for seq)
+                pass
 
     # Parse kwargs
     # We just need to check which keywords arguments
@@ -117,14 +122,26 @@ def reader(var, *args, **kwargs):
     else:
         out_type = 'ndarray'
 
+    # If 2D, get dimensions
+    if grid_data.nd == 2:
+        if grid_data.Nz == 1:
+            dim1_len = grid_data.Nx
+            dim2_len = grid_data.Ny
+        if grid_data.Ny == 1:
+            dim1_len = grid_data.Nx
+            dim2_len = grid_data.Nz
+        if grid_data.Nx == 1:
+            dim1_len = grid_data.Ny
+            dim2_len = grid_data.Nz
+
     # Parse the indexes
     if grid_data.nd == 3:
         xs = Parse_Index(xs,0,grid_data.Nx) # Defined at bottom of file
         ys = Parse_Index(ys,0,grid_data.Ny)
         zs = Parse_Index(zs,0,grid_data.Nz)
     elif grid_data.nd == 2:
-        xs = Parse_Index(xs,0,grid_data.Nx)
-        ys = Parse_Index(ys,0,grid_data.Ny)
+        xs = Parse_Index(xs,0,dim1_len)
+        ys = Parse_Index(ys,0,dim2_len)
 
     # File to load
     if (var == 'x') | (var == 'y') | (var == 'z'):
@@ -158,10 +175,10 @@ def reader(var, *args, **kwargs):
             raise SillyHumanError('Ordering choice ({0:s}) not recognized.'.format(ordering))
     elif grid_data.nd == 2:
         m = np.memmap(fname, dtype=dt, mode='r',
-                      shape=(grid_data.Nx,grid_data.Ny))
+                      shape=(dim1_len,dim2_len))
         m = m[xs,:][:,ys]
         m = np.squeeze(m)
-        if ordering == 'matlab':
+        if (ordering == 'matlab') and (grid_data.Nz == 1):
             m = np.swapaxes(m, 0, 1) # Order to [y,x] if desired.
         elif ordering != 'natural':
             # There are no other options, silly human.
