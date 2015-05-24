@@ -22,9 +22,9 @@ def get_paramgrid(style='vector'):
     elif params.nd == 2:
         if params.Nz == 1:
             x,y = spy.get_grid(style=style)
-        if params.Ny == 1:
+        elif params.Ny == 1:
             x,z = spy.get_grid(style=style)
-        if params.Nx == 1:
+        elif params.Nx == 1:
             y,z = spy.get_grid(style=style)
     Nz = params.Nz
 
@@ -60,4 +60,12 @@ def get_paramgrid(style='vector'):
         dz = z[1]-z[0]
         params.dz = dz
 
-    return gd, params
+    if params.nd == 2:
+        if params.Nz == 1:
+            return x, y ,params
+        elif params.Ny == 1:
+            return x, z ,params
+        elif params.Nx == 1:
+            return y, z ,params
+    if params.nd == 3:
+        return x, y, z,params
