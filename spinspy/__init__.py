@@ -10,7 +10,9 @@ __date__   = "22th of May, 2015"
 # Create a Params instance for storing information
 from spinspy_classes import Params
 local_data = Params()
-local_data.path = ''
+local_data.path = './'
+local_data.grid_path = ''
+local_data.conf_path = ''
 
 # Initialization file for package.
 # Read in the defined functions. Not strictly necessary,

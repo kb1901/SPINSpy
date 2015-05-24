@@ -18,21 +18,27 @@ from spinspy import local_data
 def get_params():
 
     param_data = Params()
-    
-    # Check if a spins.conf file exists,
-    # if it does, parse it.
-    conf_path = '{0:s}spins.conf'.format(local_data.path)
-    if os.path.isfile(conf_path):
-        try:
-            param_data = spinsconf_parser(param_data)
-        except:
-            msg = 'Failed to read parameters from spins.conf. Put grid parameters in spins.conf.'
+   
+    if os.path.realpath(local_data.path) == local_data.conf_path:
+        # We've already loaded it, so just return the stored variable
+        param_data = local_data.param_data
+    else:
+        # Check if a spins.conf file exists,
+        # if it does, parse it.
+        conf_path = '{0:s}spins.conf'.format(local_data.path)
+        if os.path.isfile(conf_path):
+            try:
+                param_data = spinsconf_parser(param_data)
+            except:
+                msg = 'Failed to read parameters from spins.conf. Put grid parameters in spins.conf.'
+                raise SillyHumanError(msg)
+        else:
+            msg = 'Cannot locate {0:s}. Create a spins.conf and try again.'.format(conf_path)
             raise SillyHumanError(msg)
 
-    else:
-       
-        msg = 'Cannot locate {0:s}. Create a spins.conf and try again.'.format(conf_path)
-        raise SillyHumanError(msg)
+        # Store for future reference
+        local_data.conf_path = os.path.realpath(local_data.path)
+        local_data.param_data = param_data
 
     return param_data
 ## ------

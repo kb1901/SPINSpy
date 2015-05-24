@@ -99,6 +99,8 @@ def reader(var, *args, **kwargs):
             # If only gave var and seq, assume full domain
             xs = [0,-1]
             ys = [0,-1]
+            if grid_data.nd == 3:
+                zs = [0,-1]
         else:
             xs = args[1]
             ys = args[2]
