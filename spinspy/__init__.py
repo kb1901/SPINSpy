@@ -21,8 +21,7 @@ from grid import grid
 from reader import reader
 from get_diagnostics import get_diagnostics
 from set_prefix import set_prefix
-from grid_diagnostic  import grid_diagnostic
 
 # Define what happens when someone uses
 # from matpy import *
-__all__ = ["get_shape", "grid", "reader", "spinspy_classes","get_diagnostics","grid_diagnostic"]
+__all__ = ["get_shape", "grid", "reader", "spinspy_classes","get_diagnostics"]
