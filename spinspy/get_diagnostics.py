@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+from spinspy import local_data
 
 ## -----------------
 ## Class for diagnostics
@@ -12,9 +13,18 @@ class Diagnostic:
 
 
 ## ------------------
-## get_diagnostics: Parse diagnostics.txt
+## Purpose: Parse diagnostics.txt and return a
+##          class that contains each diagnostic
+##          variable.
+## Inputs:
+##    fp (optional): Specifies the filename of
+##                   of the diagnostics file.
+## Usage: 
+##    diag = spinspy.get_diagnostics()
 def get_diagnostics(fp = 'diagnostics.txt'):
-    
+   
+    fp = '{0:s}{1:s}'.format(local_data.prefix,fp)
+
     # Start by seeing how many lines there are
     num_lines = sum(1 for line in open(fp)) - 1
 
@@ -23,14 +33,7 @@ def get_diagnostics(fp = 'diagnostics.txt'):
     # Read the header files
     # We assume that they are comma separated.
     curr = fid.readline()
-    fields = []
-    ii,jj = 0,0
-    while jj < len(curr):
-        if (curr[jj] == ',') or jj == len(curr)-1:
-            fields += [curr[ii:jj].strip()]
-            jj += 1
-            ii = jj
-        jj += 1
+    fields = map(lambda x: x.strip(), curr.split(','))
 
     # Now, add the fields to the diagnostics object
     diagnostics = Diagnostic()
@@ -45,19 +48,12 @@ def get_diagnostics(fp = 'diagnostics.txt'):
     curr = fid.readline()
     line_num = 0
     while curr != '':
-        ii,jj = 0,0
-        var_num = 0
-        while jj < len(curr):
-            if (curr[jj] == ',') or jj == len(curr)-1:
-                val = float(curr[ii:jj].strip())
-                values[var_num][line_num] = val 
-                jj += 1
-                ii = jj
-                var_num += 1
-            jj += 1
+        line = map(lambda x: float(x.strip()),curr.split(','))
+        for ii in range(len(fields)):
+            values[ii][line_num] = line[ii]
         line_num += 1
         curr = fid.readline()
- 
+
     fid.close()
 
     for ii in range(len(fields)):
