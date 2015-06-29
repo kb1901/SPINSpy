@@ -24,7 +24,6 @@ from get_paramgrid import get_paramgrid
 from reader import reader
 from get_diagnostics import get_diagnostics
 from set_path import set_path
-from plot2d import plot2d
 from nearestindex import nearestindex
 
 # Define what happens when someone uses
