@@ -31,7 +31,6 @@ from spinspy import local_data
 ## 4) To load rho.15 on a 2D grid, but in matlab ordering
 ##      rho = spinspy.reader('rho',15,[0,-1],[0,-1],ordering='matlab')
 ## ------
-
 def reader(var, *args, **kwargs):
     # This is a python version of the *_reader.m files
     # produced my SPINS for the purpose of parsing SPINS

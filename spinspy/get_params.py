@@ -69,7 +69,21 @@ def spinsconf_parser(param_data):
             val = float(line[var_len+1:line_len-1].strip())
         except:
             val = line[var_len+1:line_len].strip()
-    
+   
+        # This is where we deal with the case-sensitive for nx,Nx,nX,NX,etc
+        if var == 'nx' or var == 'NX' or var == 'nX':
+            var = 'Nx'
+        if var == 'ny' or var == 'NY' or var == 'nY':
+            var = 'Ny'
+        if var == 'nz' or var == 'NZ' or var == 'nZ':
+            var = 'Nz'
+        if var == 'lx' or var == 'LX' or var == 'lX':
+            var = 'Lx'
+        if var == 'ly' or var == 'LY' or var == 'lY':
+            var = 'Ly'
+        if var == 'lz' or var == 'LZ' or var == 'lZ':
+            var = 'Lz'
+
         setattr(param_data, var, val)
 
     # Close the file.
