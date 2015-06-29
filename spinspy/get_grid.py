@@ -54,6 +54,15 @@ def get_grid(style='vector'):
                 else:
                     X1 = reader('y', *sel3)
                     X2 = reader('z', *sel3)
+            if isdim('x'):
+                x = X1
+                if isdim('y'):
+                    y = X2
+                else:
+                    z = X2
+            else:
+                y = X1
+                z = X2
         elif grid_data.nd == 3:
             if style == 'vector':
                 x = reader('x', [0,-1],0,0)
