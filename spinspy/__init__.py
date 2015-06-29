@@ -24,7 +24,7 @@ local_data.z = None
 # spinspy.grid() instead of spinspy.grid.grid().
 from get_params import get_params
 from get_grid import get_grid
-from get_paramgrid import get_paramgrid
+from get_gridparams import get_gridparams
 from reader import reader
 from get_diagnostics import get_diagnostics
 from set_path import set_path
@@ -32,4 +32,4 @@ from nearestindex import nearestindex
 
 # Define what happens when someone uses
 # from matpy import *
-__all__ = ["spinspy_classes", "get_params", "get_grid", "get_paramgrid", "reader", "get_diagnostics", "set_path","nearestindex"]
+__all__ = ["spinspy_classes", "get_params", "get_grid", "get_gridparams", "reader", "get_diagnostics", "set_path","nearestindex"]
