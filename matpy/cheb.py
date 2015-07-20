@@ -6,7 +6,7 @@ import numpy as np
 ## ------
 #    matrix on Nx+1 points (i.e. Nx intervals)
 #    Dx = differentiation matrix
-#    x = Chebyshes grid on [-1,1]
+#    x = Chebyshev grid on [-1,1]
 ##
 #  kwargs:
 #     xlims = [a,b] # Desired limits on x
@@ -17,9 +17,10 @@ def cheb(N, xlims=[-1,1]):
         D = 0
         x = 1
     else:
-        x = np.cos(np.pi*np.array(range(0,N+1))/N).reshape([N+1,1])
+        theta = np.pi*np.arange(0,N+1)/N
+        x = cos(theta.reshape([N+1,1]))
         c = np.ravel(np.vstack([2, np.ones([N-1,1]), 2])) \
-            *(-1)**np.ravel(np.array(range(0,N+1)))
+            *(-1)**np.ravel(np.arange(0,N+1))
         c = c.reshape(c.shape[0],1)
         X = np.tile(x,(1,N+1))
         dX = X-(X.conj().transpose())

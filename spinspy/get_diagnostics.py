@@ -50,9 +50,9 @@ def get_diagnostics(fp = 'diagnostics.txt'):
     while curr != '':
         line = map(lambda x: float(x.strip()),curr.split(','))
         for ii in range(len(fields)):
-	    values[ii][line_num] = line[ii]
-	line_num += 1
-	curr = fid.readline()
+            values[ii][line_num] = line[ii]
+        line_num += 1
+        curr = fid.readline()
 
     fid.close()
 
