@@ -33,4 +33,3 @@ from nearestindex import nearestindex
 # Define what happens when someone uses
 # from matpy import *
 __all__ = ["spinspy_classes", "get_params", "get_grid", "get_gridparams", "reader", "get_diagnostics", "set_path","nearestindex"]
-=======
