@@ -4,7 +4,7 @@ import collections
 import os
 import warnings
 from spinspy_classes import SillyHumanError
-from get_shape import get_shape
+from get_params import get_params
 from spinspy import local_data
 
 ## Load SPINS outputs into numpy arrays.
@@ -31,7 +31,6 @@ from spinspy import local_data
 ## 4) To load rho.15 on a 2D grid, but in matlab ordering
 ##      rho = spinspy.reader('rho',15,[0,-1],[0,-1],ordering='matlab')
 ## ------
-
 def reader(var, *args, **kwargs):
     # This is a python version of the *_reader.m files
     # produced my SPINS for the purpose of parsing SPINS
@@ -76,7 +75,7 @@ def reader(var, *args, **kwargs):
     #           'natural' (default): [x,y,z] ordering
     #           'matlab': [y,x,z] ordering
     try: 
-        grid_data = get_shape()
+        grid_data = get_params()
     except:
         err_msg = 'Failed to read spins.conf for grid shape.' 
         raise SillyHumanError(err_msg)
@@ -95,14 +94,21 @@ def reader(var, *args, **kwargs):
             pass
     else:
         seq = args[0]
-        xs = args[1]
-        ys = args[2]
-        if nargs == 4:
-            # 4 -> 3D (less one for seq)
-            zs = args[3]
-        elif nargs == 3:
-            # 3 -> 2D (less one for seq)
-            pass
+        if nargs == 1:
+            # If only gave var and seq, assume full domain
+            xs = [0,-1]
+            ys = [0,-1]
+            if grid_data.nd == 3:
+                zs = [0,-1]
+        else:
+            xs = args[1]
+            ys = args[2]
+            if nargs == 4:
+                # 4 -> 3D (less one for seq)
+                zs = args[3]
+            elif nargs == 3:
+                # 3 -> 2D (less one for seq)
+                pass
 
     # Parse kwargs
     # We just need to check which keywords arguments
@@ -117,20 +123,32 @@ def reader(var, *args, **kwargs):
     else:
         out_type = 'ndarray'
 
+    # If 2D, get dimensions
+    if grid_data.nd == 2:
+        if grid_data.Nz == 1:
+            dim1_len = grid_data.Nx
+            dim2_len = grid_data.Ny
+        if grid_data.Ny == 1:
+            dim1_len = grid_data.Nx
+            dim2_len = grid_data.Nz
+        if grid_data.Nx == 1:
+            dim1_len = grid_data.Ny
+            dim2_len = grid_data.Nz
+
     # Parse the indexes
     if grid_data.nd == 3:
         xs = Parse_Index(xs,0,grid_data.Nx) # Defined at bottom of file
         ys = Parse_Index(ys,0,grid_data.Ny)
         zs = Parse_Index(zs,0,grid_data.Nz)
     elif grid_data.nd == 2:
-        xs = Parse_Index(xs,0,grid_data.Nx)
-        ys = Parse_Index(ys,0,grid_data.Ny)
+        xs = Parse_Index(xs,0,dim1_len)
+        ys = Parse_Index(ys,0,dim2_len)
 
     # File to load
     if (var == 'x') | (var == 'y') | (var == 'z'):
-        fname = '{0:s}{1:s}grid'.format(local_data.prefix,var)
+        fname = '{0:s}{1:s}grid'.format(local_data.path,var)
     else:
-        fname = '{0:s}{1:s}.{2:d}'.format(local_data.prefix,var,seq)
+        fname = '{0:s}{1:s}.{2:d}'.format(local_data.path,var,seq)
 
     # Does the requested file exist?
     if not(os.path.isfile(fname)):
@@ -158,10 +176,10 @@ def reader(var, *args, **kwargs):
             raise SillyHumanError('Ordering choice ({0:s}) not recognized.'.format(ordering))
     elif grid_data.nd == 2:
         m = np.memmap(fname, dtype=dt, mode='r',
-                      shape=(grid_data.Nx,grid_data.Ny))
+                      shape=(dim1_len,dim2_len))
         m = m[xs,:][:,ys]
         m = np.squeeze(m)
-        if ordering == 'matlab':
+        if (ordering == 'matlab') and (grid_data.Nz == 1):
             m = np.swapaxes(m, 0, 1) # Order to [y,x] if desired.
         elif ordering != 'natural':
             # There are no other options, silly human.

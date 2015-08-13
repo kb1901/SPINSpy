@@ -17,9 +17,9 @@ class SillyHumanError(Error):
         print(msg)
 ##------
 
-## Create grid class
+## Create parameters class
 ## ------
-class Grid():
+class Params():
     
     def __init__(self):
         # Initialize the required ones.
@@ -64,12 +64,12 @@ class Grid():
                 if getattr(self,'L'+ds[ind]) == None:
                     print('    Length of Domain: n/a')
                 else:
-                    print('    Length of Domain: {0:1.3e}'.format(getattr(self,'L'+ds[ind])))
+                    print('    Length of Domain: {0:1.3g}'.format(getattr(self,'L'+ds[ind])))
             
                 if getattr(self,ds[ind]+'lim') == None:
                     print('    Bounds of Domain: n/a')
                 else:
-                    print('    Boundas of Domain: {0:1.3e}, {1:1.3e}'.format(\
+                    print('    Bounds of Domain: {0:1.3g}, {1:1.3g}'.format(\
                                     getattr(self,ds[ind]+'lim')[0],\
                                     getattr(self,ds[ind]+'lim')[1]))
             
@@ -98,7 +98,7 @@ class Grid():
                 # Otherwise, it's a parameter.
                 else:
                     param_str = param_str + \
-                        '\n  {0:s}: {1}'.format(attr,getattr(self,attr))
+                        '\n  {0:s}: {1:g}'.format(attr,getattr(self,attr))
         print(param_str)
         print(setng_str)
 ## ------

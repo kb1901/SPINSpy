@@ -23,7 +23,7 @@ class Diagnostic:
 ##    diag = spinspy.get_diagnostics()
 def get_diagnostics(fp = 'diagnostics.txt'):
    
-    fp = '{0:s}{1:s}'.format(local_data.prefix,fp)
+    fp = '{0:s}{1:s}'.format(local_data.path,fp)
 
     # Start by seeing how many lines there are
     num_lines = sum(1 for line in open(fp)) - 1
