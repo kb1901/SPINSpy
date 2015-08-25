@@ -18,7 +18,7 @@ def cheb(N, xlims=[-1,1]):
         x = 1
     else:
         theta = np.pi*np.arange(0,N+1)/N
-        x = cos(theta.reshape([N+1,1]))
+        x = np.cos(theta.reshape([N+1,1]))
         c = np.ravel(np.vstack([2, np.ones([N-1,1]), 2])) \
             *(-1)**np.ravel(np.arange(0,N+1))
         c = c.reshape(c.shape[0],1)

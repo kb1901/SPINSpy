@@ -17,6 +17,7 @@ local_data.conf_path = ''
 local_data.x = None
 local_data.y = None
 local_data.z = None
+local_data.disc_order = 'xzy'
 
 # Initialization file for package.
 # Read in the defined functions. Not strictly necessary,

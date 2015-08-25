@@ -20,6 +20,9 @@ from spinspy import local_data
 ##              determines the output type
 ##        ordering: 'natural' (default) or 'matlab'
 ##              determines dimension ordering (x,y,z) vs (y,x,z)
+##        force_name: True or False
+##              if True, load var without appending .index
+##              i.e. load u instead of u.0
 ##
 ## Examples:
 ## 1) To load rho.15 for a full 3D grid
@@ -123,6 +126,11 @@ def reader(var, *args, **kwargs):
     else:
         out_type = 'ndarray'
 
+    if 'force_name' in kwargs:
+        force_name = kwargs['force_name']
+    else:
+        force_name = False
+
     # If 2D, get dimensions
     if grid_data.nd == 2:
         if grid_data.Nz == 1:
@@ -148,7 +156,10 @@ def reader(var, *args, **kwargs):
     if (var == 'x') | (var == 'y') | (var == 'z'):
         fname = '{0:s}{1:s}grid'.format(local_data.path,var)
     else:
-        fname = '{0:s}{1:s}.{2:d}'.format(local_data.path,var,seq)
+        if force_name:
+            fname = '{0:s}{1:s}'.format(local_data.path,var)
+        else:
+            fname = '{0:s}{1:s}.{2:d}'.format(local_data.path,var,seq)
 
     # Does the requested file exist?
     if not(os.path.isfile(fname)):
@@ -163,10 +174,38 @@ def reader(var, *args, **kwargs):
         dt = np.dtype('>d')
 
     # Create the memory map
+    if local_data.disc_order == 'xzy':
+        the_shape = (grid_data.Nx, grid_data.Nz, grid_data.Ny)
+    elif local_data.disc_order == 'xyz':
+        the_shape = (grid_data.Nx, grid_data.Ny, grid_data.Nz)
+    elif local_data.disc_order == 'zyx':
+        the_shape = (grid_data.Nz, grid_data.Ny, grid_data.Nx)
+    elif local_data.disc_order == 'zxy':
+        the_shape = (grid_data.Nz, grid_data.Nx, grid_data.Ny)
+    elif local_data.disc_order == 'yxz':
+        the_shape = (grid_data.Ny, grid_data.Nx, grid_data.Nz)
+    elif local_data.disc_order == 'yzx':
+        the_shape = (grid_data.Ny, grid_data.Nz, grid_data.Nx)
+
+
     if grid_data.nd == 3:
-        m = np.memmap(fname, dtype=dt, mode='r',
-                      shape=(grid_data.Nx,grid_data.Nz,grid_data.Ny))
-        m = np.swapaxes(m, 1, 2) # Order to [x,y,z]
+        m = np.memmap(fname, dtype=dt, mode='r',shape=the_shape)
+
+        if local_data.disc_order == 'xzy':
+            m = np.swapaxes(m, 1, 2) # Order to [x,y,z]
+        elif local_data.disc_order == 'xyz':
+            pass
+        elif local_data.disc_order == 'zyx':
+            m = np.swapaxes(m, 0, 2) 
+        elif local_data.disc_order == 'zxy':
+            m = np.swapaxes(m, 0, 2) 
+            m = np.swapaxes(m, 0, 1) # Order to [x,y,z]
+        elif local_data.disc_order == 'yxz':
+            m = np.swapaxes(m, 0, 1) 
+        elif local_data.disc_order == 'yzx':
+            m = np.swapaxes(m, 1, 2)
+            m = np.swapaxes(m, 0, 1)
+
         m = m[xs,:,:][:,ys,:][:,:,zs]
         m = np.squeeze(m)
         if ordering == 'matlab':
