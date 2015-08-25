@@ -1,13 +1,14 @@
 ## Ignore the data file for the tutorial
-Demo/Data/*
-*.swp
-*.nfs.*
+rho.15
+xgrid
+ygrid
+zgrid
 
 ## Python pyc
 *.pyc
 
 ## iPython
-*.ipynb_checkpoints/*
+.ipynb_checkpoints/*
 
 
 ## Core latex/pdflatex auxiliary files:
