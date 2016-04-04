@@ -95,6 +95,7 @@ def reader(var, *args, **kwargs):
         elif nargs == 2:
             # 2 -> 2D
             pass
+        seq = 0
     else:
         seq = args[0]
         if nargs == 1:
@@ -129,7 +130,7 @@ def reader(var, *args, **kwargs):
     if 'force_name' in kwargs:
         force_name = kwargs['force_name']
     else:
-        force_name = False
+        force_name = (seq < 0)
 
     # If 2D, get dimensions
     if grid_data.nd == 2:

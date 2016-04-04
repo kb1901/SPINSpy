@@ -53,43 +53,50 @@ def spinsconf_parser(param_data):
 
     # Loop through each line, parsing as we go.
     # Each line is assumed to be of the form
-    # <str> = ## \n
+    # key = val \n
+    # Comments are preceded by '#'
+
     for line in f:
+
         # Find the lenght of the variable name
         var_len = 0
         line_len = len(line)
-        for char in line:
-            if char == '=':
-                break
-            else:
-                var_len = var_len + 1
-        # strip removes any leading and trailing whitespace
-        var = line[0:var_len].strip()
-        try:
-            val = float(line[var_len+1:line_len-1].strip())
-        except:
-            val = line[var_len+1:line_len].strip()
-   
-        # This is where we deal with the case-sensitive for nx,Nx,nX,NX,etc
-        if var == 'nx' or var == 'NX' or var == 'nX':
-            var = 'Nx'
-        if var == 'ny' or var == 'NY' or var == 'nY':
-            var = 'Ny'
-        if var == 'nz' or var == 'NZ' or var == 'nZ':
-            var = 'Nz'
-        if var == 'lx' or var == 'LX' or var == 'lX':
-            var = 'Lx'
-        if var == 'ly' or var == 'LY' or var == 'lY':
-            var = 'Ly'
-        if var == 'lz' or var == 'LZ' or var == 'lZ':
-            var = 'Lz'
 
-        setattr(param_data, var, val)
+        if (line_len > 0) and (line[0] != '#'):
+
+            for char in line:
+                if char == '=':
+                    break
+                else:
+                    var_len = var_len + 1
+        
+            # strip removes any leading and trailing whitespace
+            var = line[0:var_len].strip()
+            try:
+                val = float(line[var_len+1:line_len-1].strip())
+            except:
+                val = line[var_len+1:line_len].strip()
+   
+            # This is where we deal with the case-sensitive for nx,Nx,nX,NX,etc
+            if var == 'nx' or var == 'NX' or var == 'nX':
+                var = 'Nx'
+            if var == 'ny' or var == 'NY' or var == 'nY':
+                var = 'Ny'
+            if var == 'nz' or var == 'NZ' or var == 'nZ':
+                var = 'Nz'
+            if var == 'lx' or var == 'LX' or var == 'lX':
+                var = 'Lx'
+            if var == 'ly' or var == 'LY' or var == 'lY':
+                var = 'Ly'
+            if var == 'lz' or var == 'LZ' or var == 'lZ':
+                var = 'Lz'
+
+            setattr(param_data, var, val)
 
     # Close the file.
     f.close()
 
-    # Double check that Nx,Ny,Nz have been assigned. If not, make them 1.
+    # Double check that Nx, Ny, Nz have been assigned. If not, make them 1.
     if not(hasattr(param_data,'Nx')):
         setattr(param_data,'Nx',1)
     if not(hasattr(param_data,'Ny')):
@@ -105,6 +112,7 @@ def spinsconf_parser(param_data):
     # We're going to assume you aren't doing
     # a 1D simulation, so if any dimension
     # is a singleton, then it's a 2D simulation.
+
     if ((param_data.Nx == 1) |
         (param_data.Ny == 1) |
         (param_data.Nz == 1)):
