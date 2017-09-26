@@ -7,9 +7,11 @@ __date__   = "29th of April, 2015"
 # matpy.cheb(5) instead of matpy.cheb.cheb(5).
 from cheb import cheb
 from darkjet import darkjet
+#from circular_map import circular_map
 from FiniteDiff import FiniteDiff
 
 # Define what happens when someone uses
 # from matpy import *
 __all__ = ["cheb", "darkjet", "FiniteDiff"]
+#__all__ = ["cheb", "darkjet", "circular_map", "FiniteDiff"]
 
