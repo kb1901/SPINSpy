@@ -249,7 +249,7 @@ def Parse_Index(ind, lb, ub):
             # Negative values are permitted, and refer to distance from end.
             if (ind[0] < lb):
                 ind[0] = (ind[0] % ub) + 1
-            if (ind[1] >= ub):
+            if (ind[1] > ub):
                 warnings.warn('Requested index exceeds size. Truncating request.')
                 ind[1] = ub
             elif (ind[1] < 0):
