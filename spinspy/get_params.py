@@ -120,9 +120,9 @@ def spinsconf_parser(param_data):
         param_data.nd = 2
     
         # Also, Nz should be 1, not Ny
-        if param_data.Ny == 1:
-            param_data.Ny = param_data.Nz
-            param_data.Nz = 1
+        #if param_data.Ny == 1:
+        #    param_data.Ny = param_data.Nz
+        #    param_data.Nz = 1
     else:
         param_data.nd = 3
     
