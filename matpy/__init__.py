@@ -8,6 +8,7 @@ __date__   = "29th of April, 2015"
 from cheb import cheb
 from darkjet import darkjet
 from FiniteDiff import FiniteDiff
+from lightbalance import lightbalance
 
 # Define what happens when someone uses
 # from matpy import *
