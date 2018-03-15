@@ -1,4 +1,4 @@
-from spinspy_classes import Params, SillyHumanError
+from .spinspy_classes import Params, SillyHumanError
 import os
 from spinspy import local_data
 

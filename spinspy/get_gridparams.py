@@ -1,7 +1,7 @@
 from __future__ import division		# as long as python 2.x is being used
 import numpy as np
 import spinspy as spy
-from spinspy_classes import SillyHumanError
+from .spinspy_classes import SillyHumanError
 
 # need to test on 2D and mapped grids 
 # (on mapped grids a vector grid will not represent the topography)

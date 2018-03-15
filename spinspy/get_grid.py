@@ -1,6 +1,6 @@
-from reader import reader
-from get_params import get_params
-from isdim import isdim
+from .reader import reader
+from .get_params import get_params
+from .isdim import isdim
 import os
 from spinspy import local_data
 
