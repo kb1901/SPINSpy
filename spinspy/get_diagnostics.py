@@ -33,7 +33,8 @@ def get_diagnostics(fp = 'diagnostics.txt'):
     # Read the header files
     # We assume that they are comma separated.
     curr = fid.readline()
-    fields = map(lambda x: x.strip(), curr.split(','))
+    fields = [x.strip() for x in curr.split(',')]
+    #fields = map(lambda x: x.strip(), curr.split(','))
 
     # Now, add the fields to the diagnostics object
     diagnostics = Diagnostic()
@@ -48,7 +49,8 @@ def get_diagnostics(fp = 'diagnostics.txt'):
     curr = fid.readline()
     line_num = 0
     while curr != '':
-        line = map(lambda x: float(x.strip()),curr.split(','))
+        #line = map(lambda x: float(x.strip()),curr.split(','))
+        line = [float(x.strip()) for x in curr.split(',')]
         for ii in range(len(fields)):
             values[ii][line_num] = line[ii]
         line_num += 1
