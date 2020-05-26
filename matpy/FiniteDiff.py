@@ -1,9 +1,10 @@
 import numpy as np
 import numpy.linalg as nlg
-#import scipy
 import scipy.sparse as sp
-from scipy.misc import factorial
-#import scipy.linalg as spalg
+try:
+    from scipy.misc import factorial
+except:
+    from scipy.special import factorial
 
 ## FiniteDiff computes FD matrices
 ## ------
@@ -11,18 +12,18 @@ from scipy.misc import factorial
 ## ------
 #
 # kwargs: [default]
-#   spb = {[True],False}      # Whether or not to return sparse form
-#   uniform = {[True], False} # If domain is uniform
+#   Sparse = {[True],False}      # Whether or not to return sparse form
+#   Uniform = {[True], False} # If domain is Uniform
 #   DiffOrd = integer [2]       # Which derivative (i.e. 1 = 1st, 2 = 2nd)
 #   Periodic = {True, [False]} # If domain is periodic
 #
 ## Notes
 #
-#   Periodic option is only available for uniform domains.
-def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1, Periodic=False):
+#   Periodic option is only available for Uniform domains.
+def FiniteDiff(x, n, Sparse=True, Uniform=True, DiffOrd = 1, Periodic=False):
 
     #FiniteDiff : Create a finite difference matrix of arbitrary order for an
-    #arbitrary grid.
+    #             arbitrary grid.
     n = int(n)
     if len(x) == 3:
         # Using a length of 3 is shorthand. x = [a,b,c] is interpreted as
@@ -38,16 +39,16 @@ def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1, Periodic=False):
         Dx = np.eye((Nx,Nx))
         return Dx
 
-    if spb:
+    if Sparse:
         Dx = sp.lil_matrix((Nx, Nx))
     else:
         Dx = np.zeros([Nx, Nx])
 
-    n2 = int(n/2.0)
+    n2 = n//2
     cn2 = int(np.ceil(n/2.0))
     fn2 = int(np.floor(n/2.0))
 
-    if uniform:
+    if Uniform:
         if len(x) == 3:
             # Using a length of 3 is shorthand. x = [a,b,c] is interpreted as
             # x = linspace(a,b,c). The advantage is that we don't actually need
@@ -81,8 +82,8 @@ def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1, Periodic=False):
         # Now do the internals.
         A = np.zeros([n+1,n+1])
         if n % 2 == 0: # If even...
-            for j in range(-n/2-1,n/2):
-                A[:,j+n/2+1] = np.power(((j+1)*dx)*np.ones([1,n+1]),range(0,n+1))/factorial(range(0,n+1))
+            for j in range(-n//2-1, n//2):
+                A[:,j+n//2+1] = np.power(((j+1)*dx)*np.ones([1,n+1]),range(0,n+1))/factorial(range(0,n+1))
             b = np.zeros(n+1)
             b[DiffOrd] = 1
             coeff = nlg.solve(A,b)
@@ -90,7 +91,7 @@ def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1, Periodic=False):
            
             if not(Periodic):
                 coeff = np.tile(coeff, [Nx, 1])
-                Dx[n/2:Nx-n/2,:] = sp.spdiags(coeff.T, range(0,n+1), Nx-n, Nx).todense()
+                Dx[n//2:Nx-n//2, :] = sp.spdiags(coeff.T, range(0,n+1), Nx-n, Nx).todense()
            
             if Periodic:
                 Dx += sp.diags(coeff,range(-n2,n2+1),shape=(Nx,Nx)).todense()
@@ -118,7 +119,7 @@ def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1, Periodic=False):
                 for j in range(-1,-cn2,-1):
                     Dx += sp.diags([coeff[cn2-j]],-j-Nx,shape=(Nx,Nx)).todense()
                     
-    else: # If not uniform
+    else: # If not Uniform
         for i in range(0,Nx):
             if i < np.ceil(n/2.0):
                 # Deal with 'left' boundary issues
@@ -149,14 +150,14 @@ def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1, Periodic=False):
                 # If n is even, then just use a centred scheme
                 if n % 2 == 0:
                     A = np.zeros([n+1,n+1])
-                    for j in range(-n/2,n/2+1):
+                    for j in range(-n//2, n//2+1):
                         dx = x[i+j] - x[i]
-                        A[:,j+n/2] = (dx**range(0,n+1))/factorial(range(0,n+1))
+                        A[:,j+n//2] = (dx**range(0,n+1))/factorial(range(0,n+1))
                     b = np.zeros(n+1)
                     b[DiffOrd] = 1;
                     coeff = nlg.solve(A,b)
                     coeff = coeff.conj().transpose()
-                    Dx[i, i-n/2:i+n/2+1] = coeff
+                    Dx[i, i-n//2:i+n//2+1] = coeff
             
                 # If n is odd, then bias to which side has the closest point.
                 elif n % 2 == 1:
@@ -188,7 +189,7 @@ def FiniteDiff(x, n, spb=True, uniform=True, DiffOrd = 1, Periodic=False):
                         coeff = coeff.conj().transpose()
                         Dx[i, i-CLn:i+CLn] = coeff
     
-    if spb:
+    if Sparse:
         # If we're making a sparse matrix, convert it now into csr form.
         Dx = Dx.tocsr()
     

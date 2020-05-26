@@ -27,7 +27,7 @@ for ind in range(num_pts):
     col_list[ind,0] = min(1., max(0., r))
     col_list[ind,1] = min(1., max(0., g))
     col_list[ind,2] = min(1., max(0., b))
-    col_list[ind,3] = 1. # fix a = 1
+    col_list[ind,3] = 1. # fix alpha = 1
 
 lightbalance = mplc.ListedColormap(col_list, 'lightbalance', num_pts)
 plt.register_cmap(cmap=lightbalance)
