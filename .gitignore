@@ -119,3 +119,10 @@ sympy-plots-for-*.tex/
 
 # xindy
 *.xdy
+
+#setuptools stuff
+setup.py
+dependency_links.txt
+PKG-INFO
+SOURCES.txt
+top_level.txt
