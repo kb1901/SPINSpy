@@ -239,7 +239,7 @@ def reader(var, *args, **kwargs):
 
 def Parse_Index(ind, lb, ub):
     
-    if isinstance(ind, collections.Sequence):
+    if isinstance(ind, collections.abc.Sequence):
     # If the input was a list (or tuple), then work with that
         if len(ind) == 1:
             # If it's a one-element list, treat that as a single slice request
