@@ -20,13 +20,13 @@ def get_gridparams(style='vector'):
     params = spy.get_params()
     gd = spy.get_grid(style=style)
 
-    try:
-        if params.mapped_grid in ['true', 'True', True]:
-            gdparams = add_mapped_params(gd, params)
-    except:
-        if not(hasattr(params, 'mapped_grid')):
-            print('Assuming grid is unmapped.')
-            params.mapped_grid = 'false'
+
+    if params.mapped_grid in ['true', 'True', True]:
+        gdparams = add_mapped_params(gd, params)
+    
+    else:
+        print('Assuming grid is unmapped.')
+        params.mapped_grid = 'false'
         gdparams = add_unmapped_params(gd, params) 
 
     return gdparams
@@ -72,17 +72,17 @@ def add_unmapped_params(gd, params):
     # could make this shorter by using a loop over x, y, and z (but will get difficult to read)
     # check if grid expansion type are in parameter object
     if params.type_x == None and Nx > 1:
-        if np.abs((x[Nx/2]-x[Nx/2-1])/(x[1]-x[0])) > 2:
+        if np.abs((x[Nx//2]-x[Nx//2-1])/(x[1]-x[0])) > 2:
             params.type_x = 'NO_SLIP'
         else:
             params.type_x = 'FREE_SLIP or PERIODIC'
     if params.type_y == None and Ny > 1:
-        if np.abs((y[Ny/2]-y[Ny/2-1])/(y[1]-y[0])) > 2:
+        if np.abs((y[Ny//2]-y[Ny//2-1])/(y[1]-y[0])) > 2:
             params.type_y = 'NO_SLIP'
         else:
             params.type_y = 'FREE_SLIP or PERIODIC'
     if params.type_z == None and Nz > 1:
-        if np.abs((z[Nz/2]-z[Nz/2-1])/(z[1]-z[0])) > 2:
+        if np.abs((z[Nz//2]-z[Nz//2-1])/(z[1]-z[0])) > 2:
             params.type_z = 'NO_SLIP'
         else:
             params.type_z = 'FREE_SLIP or PERIODIC'
