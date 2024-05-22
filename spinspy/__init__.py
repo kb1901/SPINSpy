@@ -5,7 +5,8 @@
 #   along with basic usage information.
 
 __author__ = ["Ben Storer <bastorer@uwaterloo.ca>",
-              "David Deepwell, <ddeepwel@uwaterloo.ca>"]
+              "David Deepwell, <ddeepwel@uwaterloo.ca>",
+              "Khush Bhavsar <k4bhavsa@uwaterloo.ca>"]
 __date__   = "29th of July, 2015"
 
 # Create a Params instance for storing information
@@ -31,6 +32,7 @@ from .get_diagnostics import get_diagnostics
 from .set_path import set_path
 from .nearestindex import nearestindex
 
+from .compute_quantities import *
 # Define what happens when someone uses
 # from matpy import *
 __all__ = ["spinspy_classes", "get_params", "get_grid", "get_gridparams", "reader", "get_diagnostics", "set_path","nearestindex"]
