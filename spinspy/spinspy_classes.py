@@ -46,6 +46,9 @@ class Params():
         self.type_x = None
         self.type_y = None
         self.type_z = None
+
+        # whether grid is mapped or not
+        self.mapped_grid = None
     
     def display(self):
         
