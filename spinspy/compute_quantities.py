@@ -3,9 +3,7 @@ import spinspy as spy
 import matplotlib.pyplot as plt
 import warnings
 
-from numba import jitclass
 
-@jitclass()
 class Compute():
     '''
     Class to hold information about quantities that are of interest in a simulation analysis
@@ -66,9 +64,9 @@ class Compute():
         self.knyq = np.max(np.abs(self.ksvec))
         self.lnyq = np.max(np.abs(self.lsvec))
         self.mnyq = np.max(np.abs(self.msvec))
-        self.iks = np.zeros(shape=(self.params.Nx, 1, 1), dtype=np.complex_)
-        self.ils = np.zeros(shape=(1, self.params.Ny, 1), dtype=np.complex_)
-        self.ims = np.zeros(shape=(1, 1, self.Nzf), dtype=np.complex_)
+        self.iks = np.zeros(shape=(self.params.Nx, 1, 1), dtype=np.complex128)
+        self.ils = np.zeros(shape=(1, self.params.Ny, 1), dtype=np.complex128)
+        self.ims = np.zeros(shape=(1, 1, self.Nzf), dtype=np.complex128)
 
         self.iks[:, 0, 0] = 1j * self.ksvec
         self.ils[0, :, 0] = 1j * self.lsvec
@@ -201,6 +199,8 @@ class Compute():
             except Exception:
                 print("'time' was not given, and it was not set when the class was instantiated.")
         
+        self._assign_velocity_derivatives()
+
         enst = 0.5 * (
             (self.wy - self.vz) ** 2 
             + (self.uz - self.wx) ** 2
