@@ -3,8 +3,8 @@ import sys
 import collections
 import os
 import warnings
-from .spinspy_classes import SillyHumanError
-from .get_params import get_params
+from spinspy_classes import SillyHumanError
+from get_params import get_params
 from spinspy import local_data
 
 ## Load SPINS outputs into numpy arrays.

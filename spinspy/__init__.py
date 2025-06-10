@@ -10,7 +10,7 @@ __author__ = ["Ben Storer <bastorer@uwaterloo.ca>",
 __date__   = "29th of July, 2015"
 
 # Create a Params instance for storing information
-from .spinspy_classes import Params
+from spinspy_classes import Params
 local_data = Params()
 local_data.path = './'
 local_data.grid_path = ''
